@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>S.W.A.T SD – Eignungstest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0b0f16;
+      --bg-card: #151b26;
+      --accent: #1e90ff;
+      --accent-soft: rgba(30, 144, 255, 0.2);
+      --danger: #ff4c4c;
+      --success: #27ae60;
+      --text: #e4e9f2;
+      --muted: #9aa4b8;
+      --border: #222b3a;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #182135 0, #05070c 45%, #020308 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1000px;
+      background: linear-gradient(145deg, rgba(11, 15, 22, 0.98), rgba(5, 8, 14, 0.99));
+      border-radius: 16px;
+      border: 1px solid rgba(135, 206, 250, 0.15);
+      box-shadow:
+        0 0 60px rgba(0, 0, 0, 0.85),
+        0 0 40px rgba(30, 144, 255, 0.07);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(30, 144, 255, 0.12) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(0, 255, 194, 0.09) 0, transparent 50%),
+        radial-gradient(circle at 10% 100%, rgba(255, 255, 255, 0.03) 0, transparent 55%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 span.badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(30, 144, 255, 0.12);
+      border: 1px solid rgba(30, 144, 255, 0.5);
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(4px);
+    }
+
+    .meta span::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(30, 144, 255, 0.7);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #1e90ff, #00f2fe);
+      transition: width 0.3s ease-out;
+      box-shadow:
+        0 0 12px rgba(30, 144, 255, 0.8),
+        0 0 24px rgba(0, 242, 254, 0.5);
+    }
+
+    .question-card {
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.11) 0, rgba(15, 23, 42, 0.98) 40%, #020617 100%);
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow:
+        0 14px 40px rgba(15, 23, 42, 0.8),
+        inset 0 0 0 1px rgba(15, 23, 42, 0.95);
+      margin-bottom: 18px;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .question-number {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .question-badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .answers {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .answer {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 11px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+      position: relative;
+    }
+
+    .answer:hover {
+      border-color: var(--accent);
+      background: radial-gradient(circle at left, rgba(30, 144, 255, 0.13) 0, rgba(15, 23, 42, 0.95) 40%);
+      transform: translateY(-1px);
+    }
+
+    .answer input {
+      margin-top: 3px;
+      cursor: pointer;
+    }
+
+    .answer-label {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .nav-left {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1e90ff, #00f2fe);
+      color: #020617;
+      box-shadow:
+        0 0 18px rgba(30, 144, 255, 0.6),
+        0 0 30px rgba(0, 242, 254, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 26px rgba(30, 144, 255, 0.85),
+        0 0 40px rgba(0, 242, 254, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15, 23, 42, 1);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .results {
+      background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.16) 0, rgba(15, 23, 42, 0.96) 45%, #020617 100%);
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      box-shadow:
+        0 14px 40px rgba(15, 23, 42, 0.9),
+        inset 0 0 0 1px rgba(15, 23, 42, 1);
+      margin-top: 10px;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .results-main {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .results-badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.22);
+    }
+
+    .results-summary {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .results-box {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 12px;
+    }
+
+    .results-box span.label {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .results-box span.value {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .answer-list {
+      margin-top: 8px;
+      font-size: 12px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .answer-list-item {
+      border-top: 1px solid rgba(51, 65, 85, 0.9);
+      padding: 6px 0;
+    }
+
+    .answer-list-item:first-child {
+      border-top: none;
+    }
+
+    .answer-list-item-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .answer-list-q {
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .answer-list-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .status-correct {
+      background: rgba(34, 197, 94, 0.22);
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+    }
+
+    .status-wrong {
+      background: rgba(248, 113, 113, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.7);
+      color: #fecaca;
+    }
+
+    .answer-list-body {
+      display: grid;
+      gap: 2px;
+    }
+
+    .answer-list-body span {
+      display: block;
+    }
+
+    .answer-list-body .your {
+      color: #fecaca;
+    }
+
+    .answer-list-body .correct {
+      color: #bbf7d0;
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        padding: 18px 14px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      .question-text {
+        font-size: 14px;
+      }
+      .answer-label {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="content">
+    <header>
+      <div class="title-block">
+        <div class="tagline">S.W.A.T SD • Ingame Fragebogen</div>
+        <h1>
+          S.W.A.T SD Eignungstest
+          <span class="badge">20 Fragen • RP‑Test</span>
+        </h1>
+        <p class="subtitle">
+          Dieser Fragebogen dient im Roleplay als Grundlage, um dein taktisches Verständnis und deine RP‑Herangehensweise für S.W.A.T‑Einsätze einzuschätzen.
+        </p>
+      </div>
+      <div class="meta">
+        <span>Ca. 10–15 Minuten</span>
+        <span>Mehrfachauswahl • 1 richtige Antwort</span>
+        <span>Auswertung direkt im Browser</span>
+      </div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <form id="quizForm">
+      <div id="questionContainer"></div>
+
+      <div class="nav">
+        <div class="nav-left">
+          Frage <span id="currentIndex">1</span> von <span id="totalQuestions">20</span>
+        </div>
+        <div class="nav-right">
+          <button type="button" class="btn-secondary" id="prevBtn">Zurück</button>
+          <button type="button" class="btn-primary" id="nextBtn">Weiter</button>
+          <button type="submit" class="btn-primary" id="finishBtn" style="display: none;">Test auswerten</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="results" class="results hidden"></div>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      text: "1. In einem Einkaufszentrum wurden Schüsse gemeldet. Beim Eintreffen ist es ruhig, Menschen verstecken sich in Läden, niemand weiß, ob der Schütze noch aktiv ist. Was ist deine erste Maßnahme?",
+      options: [
+        "A) Sofort alle ins Freie treiben, egal wie chaotisch es wird",
+        "B) Systematisch einen sicheren Bereich aufbauen, Menschen geordnet hinausführen und Infos sammeln",
+        "C) Alle im Gebäude lassen, bis der Täter gefunden ist",
+        "D) Direkt tief ins Gebäude vorrücken, ohne Überblick"
+      ],
+      correct: 1
+    },
+    {
+      text: "2. Du hörst in einem Flur Schritte näher kommen. Niemand hat gemeldet, dass Kollegen dort sind. Kurz darauf siehst du einen Mann mit Waffe, aber ohne Schutzkleidung. Er wirkt überrascht, als er dich sieht. Was ist der beste Ansatz?",
+      options: [
+        "A) Ohne Ansprechen sofort schießen",
+        "B) Laut und klar Anweisungen geben, Waffe fallen lassen, Hände zeigen, dabei Deckung nutzen",
+        "C) Dich wegdrehen und so tun, als hättest du ihn nicht gesehen",
+        "D) Dich ihm mit gesenkter Waffe nähern"
+      ],
+      correct: 1
+    },
+    {
+      text: "3. In einer Wohnung liegt eine verletzte Person am Boden und ruft nach Hilfe. Gleichzeitig ist nicht klar, ob der Täter noch im selben Raum oder direkt nebenan ist. Was hat Vorrang?",
+      options: [
+        "A) Sofort zur verletzten Person rennen, ohne auf die Umgebung zu achten",
+        "B) Kurz die unmittelbare Umgebung sichern und schauen, ob noch direkte Gefahr besteht, dann zur verletzten Person",
+        "C) Die verletzte Person ignorieren, bis das gesamte Haus fertig ist",
+        "D) Den Raum wieder verlassen und draußen warten"
+      ],
+      correct: 1
+    },
+    {
+      text: "4. Mehrere Kollegen haben verschiedene Hinweise, wo der Täter zuletzt gesehen wurde. Einige Infos widersprechen sich. Was machst du?",
+      options: [
+        "A) Du gehst einfach zur letzten genannten Position",
+        "B) Du entscheidest dich für gar nichts und bleibst stehen",
+        "C) Du forderst eine klare, geordnete Lagezusammenfassung, bevor du weiter vorgehst",
+        "D) Du rennst der größten Personengruppe hinterher"
+      ],
+      correct: 2
+    },
+    {
+      text: "5. In einem Treppenhaus siehst du eine Person mit Kapuze und großem Rucksack, die hektisch die Treppe hinunterläuft. Es gibt keine klare Beschreibung des Täters. Was ist eine sinnvolle Reaktion?",
+      options: [
+        "A) Direkt auf die Person schießen",
+        "B) Die Person mit klaren Anweisungen anhalten, kontrollieren und prüfen, ob sie eine Gefahr darstellt",
+        "C) Sie ignorieren, weil es auch ein normaler Besucher sein könnte",
+        "D) Alle im Funk anschreien, dass „das bestimmt der Täter ist“"
+      ],
+      correct: 1
+    },
+    {
+      text: "6. Ihr habt einen verbarrikadierten Mann in einer Wohnung. Er ruft, dass er alleine ist und sich nicht ergibt. Es gibt aber Hinweise, dass noch jemand bei ihm sein könnte. Wie gehst du mit dieser Unsicherheit um?",
+      options: [
+        "A) Du glaubst ihm und gehst davon aus, dass er wirklich alleine ist",
+        "B) Du planst die Lage so, als könnte noch mindestens eine weitere Person drin sein",
+        "C) Du brichst den Einsatz ab, weil es zu unklar ist",
+        "D) Du versuchst alleine in die Wohnung zu gelangen"
+      ],
+      correct: 1
+    },
+    {
+      text: "7. Ein Kollege schlägt vor, „blind“ eine große Menge Zwangsmittel in eine Wohnung zu bringen, obwohl nicht klar ist, wer sich genau darin aufhält. Was ist deine Position?",
+      options: [
+        "A) Sofort zustimmen, je härter desto besser",
+        "B) Dich nicht einmischen, ist nicht dein Problem",
+        "C) Ablehnen und verlangen, dass zuerst genauer geklärt wird, wer drin ist und welche Alternativen es gibt",
+        "D) Selbst noch mehr Mittel fordern"
+      ],
+      correct: 2
+    },
+    {
+      text: "8. Du hast eine Position mit perfekter Sicht auf eine Tür, aber keinerlei Deckung. Ein anderer Platz bietet weniger Sicht, aber gute Deckung. Was ist die taktisch bessere Wahl?",
+      options: [
+        "A) Die perfekte Sicht ohne Deckung",
+        "B) Die Position mit besserer Deckung, auch wenn du etwas weniger siehst",
+        "C) Gar keine Position, du stellst dich mitten in den Flur",
+        "D) Ständig zwischen beiden Positionen hin‑ und herrennen"
+      ],
+      correct: 1
+    },
+    {
+      text: "9. Während eines Einsatzes merkst du, dass der Einsatzleiter gerade sehr viele Dinge gleichzeitig handeln muss und Fehler machen könnte. Was ist eine professionelle Reaktion?",
+      options: [
+        "A) Ihn vor allen im Funk bloßstellen",
+        "B) Ihm kurz, ruhig und sachlich anbieten, bestimmte Aufgaben zu übernehmen oder Infos zusammenzufassen",
+        "C) Es ausnutzen und einfach machen, was du willst",
+        "D) Den Funk stumm schalten"
+      ],
+      correct: 1
+    },
+    {
+      text: "10. Du siehst im Treppenhaus eine Person mit einer Waffe in der Hand, die sich aber offensichtlich von euch wegbewegt und niemanden bedroht. Es ist unklar, ob das der Täter oder ein bewaffneter Zivilist ist. Wie reagierst du?",
+      options: [
+        "A) Ohne Warnung schießen",
+        "B) Wegschauen und weitermachen",
+        "C) Deutlich identifizieren, dich bemerkbar machen und klare Anweisungen geben, während du in Deckung bleibst",
+        "D) Hinterherlaufen, aber ohne etwas zu sagen"
+      ],
+      correct: 2
+    },
+    {
+      text: "11. Dein Magazin ist fast leer, aber ihr seid gerade mitten in einem möglichen Kontaktbereich. Du hast eine kurze Pause hinter Deckung. Was machst du?",
+      options: [
+        "A) Du wartest, bis es komplett leer ist",
+        "B) Du wirfst deine Waffe weg",
+        "C) Du nutzt die kurze sichere Phase, um nachzuladen und sagst kurz im Funk Bescheid",
+        "D) Du gehst nach vorne, um trotzdem „ganz vorne dabei“ zu sein"
+      ],
+      correct: 2
+    },
+    {
+      text: "12. In einem Raum sind mehrere Personen: zwei sitzen mit erhobenen Händen, eine steht im Hintergrund, die Hände nicht sichtbar. Was ist dein Fokus?",
+      options: [
+        "A) Nur auf die zwei mit erhobenen Händen achten",
+        "B) Besonders auf die Person im Hintergrund achten, deren Hände du nicht sehen kannst",
+        "C) Alle ignorieren, weil niemand schreit",
+        "D) Den Raum wieder verlassen"
+      ],
+      correct: 1
+    },
+    {
+      text: "13. Ihr habt den Täter festgenommen, aber eine wichtige Waffe wurde noch nicht gefunden. Es besteht die Möglichkeit, dass jemand anderes sie aufgenommen hat. Wie gehst du damit um?",
+      options: [
+        "A) Entwarnung geben, weil der Täter gefasst ist",
+        "B) Die Waffe ignorieren, „wird schon keiner finden“",
+        "C) Nur intern darüber reden, aber nichts offiziell melden",
+        "D) Klare Meldung, dass eine Waffe fehlt, und gezielt nach dieser Waffe suchen lassen"
+      ],
+      correct: 3
+    },
+    {
+      text: "14. Du merkst, dass ein Kollege immer wieder aggressiver auf Provokationen reagiert und in heiklen Situationen lauter und unruhiger wird. Was ist eine richtige Reaktion?",
+      options: [
+        "A) Ihn im Funk vor allen runterputzen",
+        "B) Nichts tun, „ist seine Sache“",
+        "C) Ihn später unter vier Augen ansprechen und ggf. anregen, mit einem Vorgesetzten zu reden",
+        "D) Ihn noch weiter anheizen, weil es „spannendes RP“ gibt"
+      ],
+      correct: 2
+    },
+    {
+      text: "15. In einem Haus wurden Schüsse gemeldet. Du findest im Flur eine Person, die behauptet, „alles sei nur ein Missverständnis“ und niemand verletzt. Gleichzeitig siehst du frische Blutflecken am Boden. Was ist deine Bewertung?",
+      options: [
+        "A) Du glaubst der Person und brichst den Einsatz ab",
+        "B) Du verlässt einfach das Haus",
+        "C) Du gehst davon aus, dass die Lage noch nicht geklärt ist, sicherst weiter und prüfst, wer verletzt sein könnte",
+        "D) Du konzentrierst dich nur auf die Person, die mit dir redet"
+      ],
+      correct: 2
+    },
+    {
+      text: "16. Beim Betreten eines Raumes merkst du, dass dein Kollege direkt vor dir stehen bleibt und die Tür blockiert. Dadurch kann niemand richtig in den Raum kommen oder sich verteilen. Wie reagierst du?",
+      options: [
+        "A) Du drückst ihn einfach zur Seite, ohne etwas zu sagen",
+        "B) Du gehst wieder nach draußen",
+        "C) Du stellst dich direkt hinter ihn und blockierst noch mehr",
+        "D) Du weist ihn kurz darauf hin, dass er weiter in den Raum gehen oder Platz machen soll, damit das Team sich verteilen kann"
+      ],
+      correct: 3
+    },
+    {
+      text: "17. Du erfährst, dass ein Verdächtiger vermutlich psychisch instabil ist, möglicherweise Halluzinationen hat und unberechenbar reagiert. Welche Linie ist sinnvoll?",
+      options: [
+        "A) Ihn extra aggressiv angehen, um ihn „zu brechen“",
+        "B) Ihn komplett ignorieren",
+        "C) Noch stärker auf klare, ruhige Kommunikation und sichere Abstände achten",
+        "D) Nur laut anschreien, damit er „aufwacht“"
+      ],
+      correct: 2
+    },
+    {
+      text: "18. Während eines Einsatzes beginnen einige Leute in der Umgebung, euch zu provozieren und zu beleidigen, während ihr noch mit einem bewaffneten Verdächtigen beschäftigt seid. Was ist deine Priorität?",
+      options: [
+        "A) Die Provokateure anschreien",
+        "B) Die gesamte Einheit auf die Provokateure ansetzen",
+        "C) Den Fokus auf die unmittelbare Gefahr richten und die Störer nur im Blick behalten, solange sie die Lage nicht direkt gefährden",
+        "D) Den bewaffneten Verdächtigen ignorieren"
+      ],
+      correct: 2
+    },
+    {
+      text: "19. Nach dem Einsatz stellt sich heraus, dass eine deiner Entscheidungen knapp an einer Katastrophe vorbeigeschrammt ist. Niemand wurde verletzt, aber es war sehr riskant. Was ist der beste Umgang damit?",
+      options: [
+        "A) So tun, als wäre es perfekt gelaufen",
+        "B) Jemand anderem die Schuld geben",
+        "C) Witze darüber machen und es abtun",
+        "D) Den Vorfall im Debrief offen ansprechen und daraus lernen"
+      ],
+      correct: 3
+    },
+    {
+      text: "20. Dein Charakter merkt, dass ihn SWAT‑Einsätze auch privat belasten: Schlafprobleme, Nervosität. Wie spielst du das im RP sinnvoll aus?",
+      options: [
+        "A) Gar nicht, du spielst ihn weiter wie eine Maschine",
+        "B) Du drehst ihn ins Lächerliche",
+        "C) Du zeigst, dass er darüber spricht, evtl. Hilfe sucht oder eine Pause nimmt",
+        "D) Du ignorierst es komplett und gehst direkt wieder in den nächsten Einsatz"
+      ],
+      correct: 2
+    }
+  ];
+
+  const answers = new Array(questions.length).fill(null);
+  let currentIndex = 0;
+
+  const questionContainer = document.getElementById("questionContainer");
+  const progressFill = document.getElementById("progressFill");
+  const currentIndexSpan = document.getElementById("currentIndex");
+  const totalQuestionsSpan = document.getElementById("totalQuestions");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const finishBtn = document.getElementById("finishBtn");
+  const quizForm = document.getElementById("quizForm");
+  const resultsDiv = document.getElementById("results");
+
+  totalQuestionsSpan.textContent = questions.length.toString();
+
+  function renderQuestion(index) {
+    const q = questions[index];
+    currentIndexSpan.textContent = index + 1;
+    const progressPercent = ((index) / (questions.length - 1)) * 100;
+    progressFill.style.width = progressPercent + "%";
+
+    questionContainer.innerHTML = "";
+
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    const header = document.createElement("div");
+    header.className = "question-header";
+
+    const number = document.createElement("div");
+    number.className = "question-number";
+    number.textContent = "Frage " + (index + 1);
+
+    const badge = document.createElement("div");
+    badge.className = "question-badge";
+    badge.textContent = "S.W.A.T • Taktik & RP";
+
+    header.appendChild(number);
+    header.appendChild(badge);
+
+    const text = document.createElement("div");
+    text.className = "question-text";
+    text.textContent = q.text;
+
+    const list = document.createElement("ul");
+    list.className = "answers";
+
+    q.options.forEach((opt, i) => {
+      const li = document.createElement("li");
+      li.className = "answer";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "q" + index;
+      input.value = i;
+
+      if (answers[index] === i) {
+        input.checked = true;
+      }
+
+      input.addEventListener("change", () => {
+        answers[index] = i;
+      });
+
+      const labelText = document.createElement("div");
+      labelText.className = "answer-label";
+      labelText.textContent = opt;
+
+      li.appendChild(input);
+      li.appendChild(labelText);
+      list.appendChild(li);
+    });
+
+    card.appendChild(header);
+    card.appendChild(text);
+    card.appendChild(list);
+    questionContainer.appendChild(card);
+
+    prevBtn.disabled = index === 0;
+    if (index === questions.length - 1) {
+      nextBtn.style.display = "none";
+      finishBtn.style.display = "inline-flex";
+    } else {
+      nextBtn.style.display = "inline-flex";
+      finishBtn.style.display = "none";
+    }
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  quizForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    showResults();
+  });
+
+  function showResults() {
+    let correctCount = 0;
+
+    answers.forEach((ans, idx) => {
+      if (ans === questions[idx].correct) {
+        correctCount++;
+      }
+    });
+
+    const total = questions.length;
+    const percentage = Math.round((correctCount / total) * 100);
+    const passed = percentage >= 80; // Schwelle z.B. 80 %
+
+    resultsDiv.classList.remove("hidden");
+    resultsDiv.innerHTML = "";
+
+    const header = document.createElement("div");
+    header.className = "results-header";
+
+    const main = document.createElement("div");
+    main.className = "results-main";
+    main.textContent = "Auswertung S.W.A.T SD Eignungstest";
+
+    const badge = document.createElement("div");
+    badge.className = "results-badge";
+    badge.textContent = passed ? "Bestanden" : "Nicht bestanden";
+
+    header.appendChild(main);
+    header.appendChild(badge);
+
+    const summary = document.createElement("p");
+    summary.className = "results-summary";
+    summary.textContent =
+      "Du hast " +
+      correctCount +
+      " von " +
+      total +
+      " Fragen korrekt beantwortet (" +
+      percentage +
+      "%).";
+
+    const grid = document.createElement("div");
+    grid.className = "results-grid";
+
+    const boxScore = document.createElement("div");
+    boxScore.className = "results-box";
+    boxScore.innerHTML =
+      '<span class="label">Punkte</span>' +
+      '<span class="value">' +
+      correctCount +
+      " / " +
+      total +
+      "</span>";
+
+    const boxPercent = document.createElement("div");
+    boxPercent.className = "results-box";
+    boxPercent.innerHTML =
+      '<span class="label">Prozent</span>' +
+      '<span class="value">' +
+      percentage +
+      "%</span>";
+
+    const boxStatus = document.createElement("div");
+    boxStatus.className = "results-box";
+    boxStatus.innerHTML =
+      '<span class="label">Status</span>' +
+      '<span class="value">' +
+      (passed ? "Geeignet (OOC: bestanden)" : "Noch Trainingsbedarf") +
+      "</span>";
+
+    grid.appendChild(boxScore);
+    grid.appendChild(boxPercent);
+    grid.appendChild(boxStatus);
+
+    const list = document.createElement("div");
+    list.className = "answer-list";
+
+    questions.forEach((q, idx) => {
+      const item = document.createElement("div");
+      item.className = "answer-list-item";
+
+      const headerItem = document.createElement("div");
+      headerItem.className = "answer-list-item-header";
+
+      const qTitle = document.createElement("div");
+      qTitle.className = "answer-list-q";
+      qTitle.textContent = "Frage " + (idx + 1);
+
+      const status = document.createElement("div");
+      const isCorrect = answers[idx] === q.correct;
+      status.className =
+        "answer-list-status " + (isCorrect ? "status-correct" : "status-wrong");
+      status.textContent = isCorrect ? "Korrekt" : "Falsch";
+
+      headerItem.appendChild(qTitle);
+      headerItem.appendChild(status);
+
+      const body = document.createElement("div");
+      body.className = "answer-list-body";
+
+      const your = document.createElement("span");
+      your.className = "your";
+      your.textContent =
+        "Deine Antwort: " +
+        (answers[idx] !== null ? q.options[answers[idx]] : "keine Angabe");
+
+      const correct = document.createElement("span");
+      correct.className = "correct";
+      correct.textContent = "Richtige Antwort: " + q.options[q.correct];
+
+      body.appendChild(your);
+      body.appendChild(correct);
+
+      item.appendChild(headerItem);
+      item.appendChild(body);
+
+      list.appendChild(item);
+    });
+
+    const buttons = document.createElement("div");
+    buttons.className = "nav-right";
+    buttons.style.marginTop = "10px";
+
+    const restartBtn = document.createElement("button");
+    restartBtn.type = "button";
+    restartBtn.className = "btn-secondary";
+    restartBtn.textContent = "Test zurücksetzen";
+    restartBtn.addEventListener("click", () => {
+      for (let i = 0; i < answers.length; i++) {
+        answers[i] = null;
+      }
+      currentIndex = 0;
+      resultsDiv.classList.add("hidden");
+      renderQuestion(currentIndex);
+    });
+
+    buttons.appendChild(restartBtn);
+
+    resultsDiv.appendChild(header);
+    resultsDiv.appendChild(summary);
+    resultsDiv.appendChild(grid);
+    resultsDiv.appendChild(list);
+    resultsDiv.appendChild(buttons);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Initial render
+  renderQuestion(currentIndex);
+</script>
+</body>
+</html>
